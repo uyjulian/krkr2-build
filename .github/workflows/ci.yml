@@ -12,10 +12,17 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 20
     container: node:16-buster-slim
+    defaults:
+      run:
+        shell: bash
     steps:
-    - uses: actions/checkout@v3
-      with:
-          submodules: recursive
+    - name: Upgrade packages
+      run: |
+        sudo apt-get update 1>&2
+        sudo apt-get upgrade -y 1>&2
+    - name: Install git
+      run: |
+        sudo apt-get install git
     - name: Install Wine
       run: |
         sudo dpkg --add-architecture i386 1>&2
@@ -33,3 +40,7 @@ jobs:
         while ! xdpyinfo; do sleep 1; jobs 1 || exit 1; done
         openbox & 1>&2
         echo "DISPLAY=:2" >> "$GITHUB_ENV"
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+          submodules: recursive
