@@ -19,7 +19,8 @@ jobs:
       run: |
         sudo dpkg --add-architecture i386 1>&2
         sudo apt-get update 1>&2
-        sudo apt install --install-recommends wine wine32 wine64 libwine libwine:i386 wine64-tools -y 1>&2
+        sudo apt-get upgrade -y 1>&2
+        sudo apt install --install-recommends wine wine32 wine64 wine64-tools -y 1>&2
     - name: Install display dependencies
       run: |
         echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
