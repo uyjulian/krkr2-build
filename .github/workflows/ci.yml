@@ -16,11 +16,6 @@ jobs:
       run:
         shell: bash
     steps:
-    - name: What is HOME
-      run: |
-        echo $HOME
-        echo ~
-        pwd
     - name: Upgrade packages
       run: |
         apt-get update 1>&2
@@ -44,6 +39,9 @@ jobs:
         while ! xdpyinfo; do sleep 1; jobs 1 || exit 1; done
         openbox & 1>&2
         echo "DISPLAY=:2" >> "$GITHUB_ENV"
+    - name: Setup Wine environment
+      run: |
+        echo "WINEPREFIX=$RUNNER_TEMP/.wineprefix" >> "$GITHUB_ENV"
     - name: Setup Wine
       run: |
         wineserver -p
