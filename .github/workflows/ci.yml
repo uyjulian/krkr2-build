@@ -20,6 +20,7 @@ jobs:
       run: |
         echo $HOME
         echo ~
+        pwd
     - name: Upgrade packages
       run: |
         apt-get update 1>&2
