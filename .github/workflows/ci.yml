@@ -39,6 +39,10 @@ jobs:
         while ! xdpyinfo; do sleep 1; jobs 1 || exit 1; done
         openbox & 1>&2
         echo "DISPLAY=:2" >> "$GITHUB_ENV"
+    - name: Setup Wine environment
+      run: |
+        mkdir -p "$RUNNER_TEMP/my_wineprefix"
+        echo "WINEPREFIX=$RUNNER_TEMP/my_wineprefix/.wineprefix" >> "$GITHUB_ENV"
     - name: Setup Wine
       run: |
         wineboot -e
