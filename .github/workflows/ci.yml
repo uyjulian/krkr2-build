@@ -46,6 +46,7 @@ jobs:
       run: |
         mkdir -p "$RUNNER_TEMP/my_wineprefix"
         echo "WINEPREFIX=$RUNNER_TEMP/my_wineprefix/.wineprefix" >> "$GITHUB_ENV"
+        echo "WINEDLLOVERRIDES=mscoree,mshtml=" >> "$GITHUB_ENV"
     - name: Setup Wine
       run: |
         wineboot -e
