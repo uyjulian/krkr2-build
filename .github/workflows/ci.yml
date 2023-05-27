@@ -68,14 +68,20 @@ jobs:
         bash install.sh
         bash config.sh
         bash fixreg.sh
+    - name: Copy sources
+      run: |
+        cp -Rp src $WINEPREFIX/drive_c/src
     - name: Generate make
       run: |
-        cd src
+        cd $WINEPREFIX/drive_c/src
         wine bpr2mak Project2.bpr
     - name: Make
       run: |
-        cd src
+        cd $WINEPREFIX/drive_c/src
         wine make -f Project2.mak
+    - name: Copy exe
+      run: |
+        cp $WINEPREFIX/drive_c/src/Project2.exe src/Project2.exe
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
