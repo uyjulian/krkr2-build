@@ -74,11 +74,11 @@ jobs:
         wine bpr2mak Project2.bpr
     - name: Make
       run: |
-        cd scr
-        wine make -f Project2.bpr
+        cd src
+        wine make -f Project2.mak
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
           name: Project2-exe
-          path: t/Project2.exe
+          path: src/Project2.exe
 
