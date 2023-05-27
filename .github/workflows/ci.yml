@@ -23,6 +23,9 @@ jobs:
     - name: Install git
       run: |
         apt-get install git -y
+    - name: Install archive dependencies
+      run: |
+        apt-get install zstd openssl tar curl -y 1>&2
     - name: Install Wine
       run: |
         dpkg --add-architecture i386 1>&2
@@ -53,3 +56,29 @@ jobs:
       uses: actions/checkout@v3
       with:
           submodules: recursive
+    - name: Download and unpack toolchain
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/kirikiri2_toolchain_cxx.tar.zst.encrypted
+        mkdir t
+        cd t
+        openssl enc -d -aes-256-cbc -md md5 -pass pass:for_kirikiri2_compile -in ../kirikiri2_toolchain_cxx.tar.zst.encrypted | tar --zstd -x
+    - name: Prepare toolchain
+      run: |
+        cd t
+        bash install.sh
+        bash config.sh
+        bash fixreg.sh
+    - name: Generate make
+      run: |
+        cd t
+        wine bpr2mak Project2.bpr
+    - name: Make
+      run: |
+        cd t
+        wine make -f Project2.bpr
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+          name: Project2-exe
+          path: t/Project2.exe
+
