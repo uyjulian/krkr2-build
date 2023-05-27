@@ -58,10 +58,10 @@ jobs:
           submodules: recursive
     - name: Download and unpack toolchain
       run: |
-        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/kirikiri2_toolchain_cxx.tar.zst.encrypted
         mkdir $WINEPREFIX/drive_c/t
         cd $WINEPREFIX/drive_c/t
-        openssl enc -d -aes-256-cbc -md md5 -pass pass:for_kirikiri2_compile -in ../kirikiri2_toolchain_cxx.tar.zst.encrypted | tar --zstd -x
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/kirikiri2_toolchain_cxx.tar.zst.encrypted
+        openssl enc -d -aes-256-cbc -md md5 -pass pass:for_kirikiri2_compile -in ./kirikiri2_toolchain_cxx.tar.zst.encrypted | tar --zstd -x
     - name: Prepare toolchain
       run: |
         cd $WINEPREFIX/drive_c/t
