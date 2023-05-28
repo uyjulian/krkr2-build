@@ -95,9 +95,71 @@ jobs:
     - name: Copy boost
       run: |
         mkdir -p libs
-        mkdir -p include
-        cp -f -r boost/boost_1_30_0/libs/regex/build/bcb5/ libs
-        cp -f -r boost/boost_1_30_0/boost/ include/boost/
+        cp -f -r boost/boost_1_30_0/libs/regex/build/bcb5/ t/instroot/Borland/CBuilder/Lib
+        cp -f -r boost/boost_1_30_0/boost/ t/instroot/Borland/CBuilder/Include/boost
+    - name: Download and unpack erinalib
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/erinalib_krkr2.tar.zst
+        mkdir erinalib
+        cd erinalib
+        tar --zstd -xf ../erinalib_krkr2.tar.zst
+    - name: Compile erinalib
+      run: |
+        cd erinalib
+        wine bpr2mak -tdeflib.bmk liberina.bpr
+        wine make -f liberina.mak
+    - name: Copy erinalib
+      run: |
+        cp -f -t t/instroot/Borland/CBuilder/Lib erinalib/liberina.lib
+        cp -f -r erinalib/library/include/ t/instroot/Borland/CBuilder/Include/erina
+    - name: Download and unpack jpeg2
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/jpeg2_krkr2.tar.zst
+        mkdir jpeg2
+        cd jpeg2
+        tar --zstd -xf ../jpeg2_krkr2.tar.zst
+    - name: Compile jpeg2
+      run: |
+        cd jpeg2
+        wine bpr2mak -tdeflib.bmk libjpeg2.bpr
+        wine make -f libjpeg2.mak
+    - name: Copy jpeg2
+      run: |
+        cp -f -t t/instroot/Borland/CBuilder/Lib jpeg2/libjpeg2.lib
+        mkdir -p t/instroot/Borland/CBuilder/Include/libjpeg2
+        cp -f -t t/instroot/Borland/CBuilder/Include/libjpeg2 jpeg2/ijg/{cderror.h,cdjpeg.h,jchuff.h,jconfig.h,jdct.h,jdhuff.h,jerror.h,jinclude.h,jmemsys.h,jmorecfg.h,jpegint.h,jpeglib.h,jversion.h,transupp.h}
+    - name: Download and unpack zlib
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/zlib_krkr2.tar.zst
+        mkdir zlib
+        cd zlib
+        tar --zstd -xf ../zlib_krkr2.tar.zst
+    - name: Compile zlib
+      run: |
+        cd zlib
+        wine bpr2mak -tdeflib.bmk zlib.bpr
+        wine make -f zlib.mak
+    - name: Copy zlib
+      run: |
+        cp -f -t t/instroot/Borland/CBuilder/Lib zlib/zlib.lib
+        mkdir -p t/instroot/Borland/CBuilder/Include/zlib
+        cp -f -t t/instroot/Borland/CBuilder/Include/zlib zlib/{zconf.h,zlib.h,zutil.h}
+    - name: Download and unpack png
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/png_krkr2.tar.zst
+        mkdir png
+        cd png
+        tar --zstd -xf ../png_krkr2.tar.zst
+    - name: Compile png
+      run: |
+        cd png
+        wine bpr2mak -tdeflib.bmk deelibpng.bpr
+        wine make -f deelibpng.mak
+    - name: Copy png
+      run: |
+        cp -f -t t/instroot/Borland/CBuilder/Lib png/deelibpng.lib
+        mkdir -p t/instroot/Borland/CBuilder/Include/libpng
+        cp -f -t t/instroot/Borland/CBuilder/Include/libpng png/lpng/{PNG.H,pngasmrd.h,pngconf.h}
     - name: Generate make
       run: |
         cd src
