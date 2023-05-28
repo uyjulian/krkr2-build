@@ -72,6 +72,10 @@ jobs:
         bash install.sh
         bash config.sh
         bash fixreg.sh
+    - name: Build RTL
+      run: |
+        cd $WINEPREFIX/drive_c/t/instroot/Borland/CBuilder/Source/RTL
+        wine cmd /c build.bat
     - name: Generate make
       run: |
         cd src
