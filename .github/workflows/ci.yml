@@ -72,10 +72,10 @@ jobs:
         bash install.sh
         bash config.sh
         bash fixreg.sh
-    - name: Build RTL
+    - name: Build static VCL multithread RTL
       run: |
         cd $WINEPREFIX/drive_c/t/instroot/Borland/CBuilder/Source/RTL
-        wine cmd /c build.bat
+        wine make -DMT -DMAGIC all
     - name: Generate make
       run: |
         cd src
