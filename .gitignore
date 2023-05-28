@@ -1,4 +1,6 @@
 *.obj
 *.tds
 *.exe
+*.lib
+*.dll
 
