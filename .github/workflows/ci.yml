@@ -95,7 +95,9 @@ jobs:
     - name: Copy boost
       run: |
         mkdir -p libs
+        mkdir -p include
         cp -f -r boost/boost_1_30_0/libs/regex/build/bcb5/ libs
+        cp -f -r boost/boost_1_30_0/boost/ include/boost/
     - name: Generate make
       run: |
         cd src
