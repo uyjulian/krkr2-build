@@ -25,7 +25,7 @@ jobs:
         apt-get install git -y
     - name: Install archive dependencies
       run: |
-        apt-get install gzip bzip2 zstd openssl tar curl -y 1>&2
+        apt-get install gzip bzip2 zstd openssl tar lhasa curl -y 1>&2
     - name: Install Wine
       run: |
         dpkg --add-architecture i386 1>&2
@@ -175,6 +175,16 @@ jobs:
       run: |
         cp -f -t t/instroot/Borland/CBuilder/Lib libtomcrypt1/libtomcrypt1.lib
         cp -f -r libtomcrypt1/libtomcrypt/src/headers/ t/instroot/Borland/CBuilder/Include/tomcrypt1
+    - name: Download and unpack shlib
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/ShLib096.lzh
+        mkdir shlib
+        cd shlib
+        lha -x ../ShLib096.lzh
+    - name: Compile shlib
+      run: |
+        cd shlib
+        wine dcc32 -JPHNE -JL ShellLib50.dpk
     - name: Generate make
       run: |
         cd src
