@@ -63,6 +63,9 @@ jobs:
         cd $WINEPREFIX/drive_c/t
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/kirikiri2_toolchain_cxx.tar.zst.encrypted
         openssl enc -d -aes-256-cbc -md md5 -pass pass:for_kirikiri2_compile -in ./kirikiri2_toolchain_cxx.tar.zst.encrypted | tar --zstd -x
+    - name: Copy updated scripts
+      run: |
+        cp -t $WINEPREFIX/drive_c/t scripts/*
     - name: Prepare toolchain
       run: |
         cd $WINEPREFIX/drive_c/t
