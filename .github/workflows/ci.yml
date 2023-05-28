@@ -160,6 +160,21 @@ jobs:
         cp -f -t t/instroot/Borland/CBuilder/Lib png/deelibpng.lib
         mkdir -p t/instroot/Borland/CBuilder/Include/libpng
         cp -f -t t/instroot/Borland/CBuilder/Include/libpng png/lpng/{PNG.H,pngasmrd.h,pngconf.h}
+    - name: Download and unpack libtomcrypt1
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/libtomcrypt1_krkr2.tar.zst
+        mkdir libtomcrypt1
+        cd libtomcrypt1
+        tar --zstd -xf ../libtomcrypt1_krkr2.tar.zst
+    - name: Compile libtomcrypt1
+      run: |
+        cd libtomcrypt1
+        wine bpr2mak -tdeflib.bmk libtomcrypt1.bpr
+        wine make -f libtomcrypt1.mak
+    - name: Copy libtomcrypt1
+      run: |
+        cp -f -t t/instroot/Borland/CBuilder/Lib libtomcrypt1/libtomcrypt1.lib
+        cp -f -r libtomcrypt1/libtomcrypt/src/headers/ t/instroot/Borland/CBuilder/Include/tomcrypt1
     - name: Generate make
       run: |
         cd src
