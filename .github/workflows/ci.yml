@@ -78,6 +78,24 @@ jobs:
       run: |
         cd t/instroot/Borland/CBuilder/Source/RTL
         wine make -DMT -DMAGIC all
+    - name: Copy static VCL multithread RTL
+      run: |
+        mv t/instroot/Borland/CBuilder/Source/RTL/lib/psdk t/instroot/Borland/CBuilder/Source/RTL/lib/PSDK
+        cp -f -r t/instroot/Borland/CBuilder/Source/RTL/lib/ t/instroot/Borland/CBuilder/Lib
+    - name: Download and unpack Boost
+      run: |
+        curl -LOC - http://sourceforge.net/projects/boost/files/boost/1.30.0/boost_1_30_0.tar.bz2
+        mkdir boost
+        cd boost
+        tar -xyf ../boost_1_30_0.tar.bz2
+    - name: Compile boost
+      run: |
+        cd boost/boost_1_30_0/libs/regex/build
+        wine make -f bcb5.mak
+    - name: Copy boost
+      run: |
+        mkdir -p libs
+        cp -f -r boost/boost_1_30_0/libs/regex/build/bcb5/ libs
     - name: Generate make
       run: |
         cd src
