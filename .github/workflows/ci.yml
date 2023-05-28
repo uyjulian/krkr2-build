@@ -87,7 +87,7 @@ jobs:
         curl -LOC - http://sourceforge.net/projects/boost/files/boost/1.30.0/boost_1_30_0.tar.bz2
         mkdir boost
         cd boost
-        tar -xyf ../boost_1_30_0.tar.bz2
+        tar -xjf ../boost_1_30_0.tar.bz2
     - name: Compile boost
       run: |
         cd boost/boost_1_30_0/libs/regex/build
