@@ -25,7 +25,7 @@ jobs:
         apt-get install git -y
     - name: Install archive dependencies
       run: |
-        apt-get install zstd openssl tar curl -y 1>&2
+        apt-get install gzip bzip2 zstd openssl tar curl -y 1>&2
     - name: Install Wine
       run: |
         dpkg --add-architecture i386 1>&2
