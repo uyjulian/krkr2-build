@@ -44,8 +44,8 @@ jobs:
         echo "DISPLAY=:2" >> "$GITHUB_ENV"
     - name: Setup Wine environment
       run: |
-        mkdir -p "$RUNNER_TEMP/my_wineprefix"
-        echo "WINEPREFIX=$RUNNER_TEMP/my_wineprefix/.wineprefix" >> "$GITHUB_ENV"
+        mkdir -p "$RUNNER_TEMP/mypfx"
+        echo "WINEPREFIX=$RUNNER_TEMP/mypfx/wpfx" >> "$GITHUB_ENV"
         echo "WINEDLLOVERRIDES=mscoree,mshtml=" >> "$GITHUB_ENV"
     - name: Setup Wine
       run: |
