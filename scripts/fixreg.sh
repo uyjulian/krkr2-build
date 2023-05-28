@@ -1,6 +1,7 @@
 
-BCB_ROOT=$(realpath instroot)
-export BCB_ROOT_WINE=$(printf 'Z:%s' ${BCB_ROOT} | tr '/' '\\')
+# BCB_ROOT=$(realpath instroot)
+# export BCB_ROOT_WINE=$(printf 'Z:%s' ${BCB_ROOT} | tr '/' '\\')
+export BCB_ROOT_WINE=C:\\tt
 export BCB_ROOT_WINE_CBUILDER5=${BCB_ROOT_WINE}"\\"Borland"\\"CBuilder
 export BCB_ROOT_WINE_ESCAPED=$(printf '%s' ${BCB_ROOT_WINE} | sed -e 's/\\/\\\\/g')
 export BCB_ROOT_WINE_CBUILDER5_ESCAPED=$(printf '%s' ${BCB_ROOT_WINE_CBUILDER5} | sed -e 's/\\/\\\\/g')

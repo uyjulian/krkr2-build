@@ -70,12 +70,12 @@ jobs:
     - name: Prepare toolchain
       run: |
         cd $WINEPREFIX/drive_c/t
-        bash install.sh
         bash config.sh
         bash fixreg.sh
+        bash install.sh
     - name: Build static VCL multithread RTL
       run: |
-        cd $WINEPREFIX/drive_c/t/instroot/Borland/CBuilder/Source/RTL
+        cd $WINEPREFIX/drive_c/tt/Borland/CBuilder/Source/RTL
         wine make -DMT -DMAGIC all
     - name: Generate make
       run: |
