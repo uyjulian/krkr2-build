@@ -192,6 +192,11 @@ jobs:
       run: |
         cd shlib
         wine dcc32 -JPHNE -JL ShellLib50.dpk
+        wine tlib ShellLib50.lib $(printf "+%s " *.obj)
+    - name: Copy shlib
+      run: |
+        mkdir -p t/instroot/Borland/CBuilder/Projects/comps/o/shlib
+        cp -f -t t/instroot/Borland/CBuilder/Projects/comps/o/shlib shlib/ShellLib50.lib shlib/ShellLib50.bpi shlib/*.h
     - name: Generate make
       run: |
         cd src
