@@ -1,0 +1,37 @@
+diff -burN a/Source/RTL/source/except/xx.cpp b/Source/RTL/source/except/xx.cpp
+--- a/Source/RTL/source/except/xx.cpp	2023-03-05 00:51:51.000000000 -0600
++++ b/Source/RTL/source/except/xx.cpp	2023-05-28 19:28:08.663546971 -0500
+@@ -246,6 +246,23 @@
+ 		{ typeid(EStackOverflow   &).tpp,       14 },
+ 	};
+ 
++typedef void __cdecl (*__dee_hacked_getExceptionObjectHook_type)(int ErrorCode,
++		EXCEPTION_RECORD *P, unsigned long osEsp, unsigned long osERR, PCONTEXT ctx);
++static __dee_hacked_getExceptionObjectHook_type __dee_hacked_getExceptionObjectHook = NULL;
++
++extern "C"
++{
++	__dee_hacked_getExceptionObjectHook_type
++		__cdecl __dee_hacked_set_getExceptionObjectHook(
++		__dee_hacked_getExceptionObjectHook_type handler)
++	{
++		__dee_hacked_getExceptionObjectHook_type oldhandler;
++		oldhandler = __dee_hacked_getExceptionObjectHook;
++		__dee_hacked_getExceptionObjectHook = handler;
++		return oldhandler;
++	}
++}
++
+ static  excDscPtr       getExceptionObject(EXCEPTION_RECORD *P, unsigned long osEsp, unsigned long osERR, PCONTEXT ctx)
+ {
+ 	int             ErrorCode;
+@@ -317,6 +334,9 @@
+ 
+ 	memcpy(xdp->xdValue, &excObj, sizeof(Exception *));
+ 
++	if(__dee_hacked_getExceptionObjectHook)
++		__dee_hacked_getExceptionObjectHook(ErrorCode, P, osEsp, osERR, ctx);
++
+ 	return xdp;
+ }
+ #endif  // DELPHI_EXCEPTIONS

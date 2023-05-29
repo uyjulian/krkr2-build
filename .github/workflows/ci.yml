@@ -25,7 +25,7 @@ jobs:
         apt-get install git -y
     - name: Install archive dependencies
       run: |
-        apt-get install gzip bzip2 zstd openssl tar lhasa curl -y 1>&2
+        apt-get install gzip bzip2 zstd openssl tar lhasa patch dos2unix curl -y 1>&2
     - name: Install Wine
       run: |
         dpkg --add-architecture i386 1>&2
@@ -74,6 +74,13 @@ jobs:
         bash config.sh
         bash fixreg.sh
         bash install.sh
+    - name: Patch RTL
+      run: |
+        export PATCH_PATH=$(realpath patches/rtl_exception_hack.patch)
+        cd t/instroot/Borland/CBuilder
+        dos2unix Source/RTL/source/except/xx.cpp
+        patch -p1 < $PATCH_PATH
+        unix2dos Source/RTL/source/except/xx.cpp
     - name: Build static VCL multithread RTL
       run: |
         cd t/instroot/Borland/CBuilder/Source/RTL
