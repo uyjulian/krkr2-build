@@ -196,7 +196,12 @@ jobs:
     - name: Copy shlib
       run: |
         mkdir -p t/instroot/Borland/CBuilder/Projects/comps/o/shlib
-        cp -f -t t/instroot/Borland/CBuilder/Projects/comps/o/shlib shlib/ShellLib50.lib shlib/ShellLib50.bpi shlib/*.h
+        cp -f -t t/instroot/Borland/CBuilder/Projects/comps/o/shlib shlib/ShellLib50.lib shlib/ShellLib50.bpi shlib/*.hpp
+        cd t/instroot/Borland/CBuilder/Projects/comps/o/shlib
+        ln -s ShellLib50.lib shlbpk.lib
+        ln -s ShellLib50.lib shlibbpk.lib
+        ln -s ShellLib50.bpi shlbpk.bpi
+        ln -s ShellLib50.bpi shlibbpk.bpi
     - name: Generate make
       run: |
         cd src
