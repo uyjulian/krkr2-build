@@ -87,8 +87,7 @@ jobs:
         wine make -DMT -DMAGIC all
     - name: Copy static VCL multithread RTL
       run: |
-        mv t/instroot/Borland/CBuilder/Source/RTL/lib/psdk t/instroot/Borland/CBuilder/Source/RTL/lib/PSDK
-        cp -f -r t/instroot/Borland/CBuilder/Source/RTL/lib/ t/instroot/Borland/CBuilder/Lib
+        cp -f -t t/instroot/Borland/CBuilder/Lib t/instroot/Borland/CBuilder/Source/RTL/lib/*.lib
     - name: Download and unpack Boost
       run: |
         curl -LOC - http://sourceforge.net/projects/boost/files/boost/1.30.0/boost_1_30_0.tar.bz2
@@ -102,7 +101,7 @@ jobs:
     - name: Copy boost
       run: |
         mkdir -p libs
-        cp -f -r boost/boost_1_30_0/libs/regex/build/bcb5/ t/instroot/Borland/CBuilder/Lib
+        cp -f -t t/instroot/Borland/CBuilder/Lib boost/boost_1_30_0/libs/regex/build/bcb5/*.lib
         cp -f -r boost/boost_1_30_0/boost/ t/instroot/Borland/CBuilder/Include/boost
     - name: Download and unpack erinalib
       run: |
