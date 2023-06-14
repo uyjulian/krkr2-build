@@ -90,7 +90,7 @@ jobs:
         cp -f -t t/instroot/Borland/CBuilder/Lib t/instroot/Borland/CBuilder/Source/RTL/lib/*.lib
     - name: Download and unpack Boost
       run: |
-        curl -LOC - http://sourceforge.net/projects/boost/files/boost/1.30.0/boost_1_30_0.tar.bz2
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/boost_1_30_0.tar.bz2
         mkdir boost
         cd boost
         tar -xjf ../boost_1_30_0.tar.bz2
