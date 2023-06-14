@@ -23,6 +23,9 @@ jobs:
     - name: Install git
       run: |
         apt-get install git -y
+    - name: Install perl
+      run: |
+        apt-get install perl -y
     - name: Install archive dependencies
       run: |
         apt-get install gzip bzip2 zstd openssl tar lhasa unzip patch dos2unix curl -y 1>&2
@@ -236,6 +239,75 @@ jobs:
         ln -s ShellLib50.bpi shlbpk.bpi
         ln -s ShellLib50.bpi shlibbpk.bpi
         popd
+    - name: Download and unpack krkr2
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/krkr2_2_32_stable_src.tar.zst
+        mkdir krkr2
+        pushd krkr2
+        zstd -dcf ../krkr2_2_32_stable_src.tar.zst | tar -x
+        popd
+    - name: Patch krkr2
+      run: |
+        export PATCH_PATH=$(realpath patches/krkr2.patch)
+        pushd krkr2
+        dos2unix kirikiri2/src/core/base/win32/makestub.pl
+        patch -p1 < $PATCH_PATH
+        unix2dos kirikiri2/src/core/base/win32/makestub.pl
+        popd
+    - name: Copy libraries for krkr2
+      run: |
+        mkdir -p krkr2/kirikiri2/lib
+        cp -f -t krkr2/kirikiri2/lib t/instroot/Borland/CBuilder/Lib/{zlib.lib,deelibpng.lib,libjpeg2.lib}
+    - name: Compile krkr2
+      run: |
+        pushd krkr2
+        pushd kirikiri2/src/core/visual/IA32
+        find . -iname \*.nas -exec wine nasm -fwin32 -DWIN32 -g -f obj {} \;
+        rm -f tvpgl_ia32.lib
+        wine tlib tvpgl_ia32.lib $(printf "+%s " *.obj)
+        perl summary.pl
+        unix2dos tvpgl_ia32_intf_.c tvpgl_ia32_intf_.h
+        perl copy_if_differ.pl tvpgl_ia32_intf_.c tvpgl_ia32_intf.c
+        perl copy_if_differ.pl tvpgl_ia32_intf_.h tvpgl_ia32_intf.h
+        popd
+        pushd kirikiri2/src/core/base/win32
+        perl makestub.pl
+        unix2dos FuncStubs.~cpp FuncStubs.~h
+        perl copy_if_differ.pl FuncStubs.~cpp FuncStubs.cpp
+        perl copy_if_differ.pl FuncStubs.~h FuncStubs.h
+        popd
+        pushd kirikiri2/src/core/visual/glgen
+        perl gengl.pl
+        unix2dos tvpgl.c tvpgl.h
+        cp -f tvpgl.c ../tvpgl.c
+        cp -f tvpgl.h ../tvpgl.h
+        popd
+        pushd kirikiri2/src/core/msg/win32
+        perl gen_optdesc_res.pl
+        unix2dos OptionsDesc.cpp
+        popd
+        pushd kirikiri2/src/core/environ/win32
+        cp -f tvpwin32.bpr tvpwin32.~bpr
+        cp -f tvpwin32.res tvpwin32.~res
+        perl basefix.pl
+        unix2dos tvpwin32.bpr
+        popd
+        pushd kirikiri2/src/core/environ/win32
+        wine bpr2mak tvpwin32.bpr
+        wine make -f tvpwin32.mak
+        popd
+        rm -f kirikiri2/bin/win32/krkr.eXe
+        cat kirikiri2/bin/win32/tvpwin32.exe kirikiri2/src/core/environ/win32/optionarea.bin > kirikiri2/bin/win32/krkr.eXe
+        pushd kirikiri2/src/core/environ/win32
+        cp -f tvpwin32.~bpr tvpwin32.bpr
+        cp -f tvpwin32.~res tvpwin32.res
+        popd
+        popd
+    - name: Upload krkr2 artifact
+      uses: actions/upload-artifact@master
+      with:
+          name: Project2-exe
+          path: kirikiri2/bin/win32/krkr.eXe
     - name: Generate make
       run: |
         pushd src

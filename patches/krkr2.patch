@@ -1,0 +1,12 @@
+diff -burN krkr2_orig/kirikiri2/src/core/base/win32/makestub.pl krkr2/kirikiri2/src/core/base/win32/makestub.pl
+--- krkr2_orig/kirikiri2/src/core/base/win32/makestub.pl	2023-06-14 06:31:10.000000000 -0500
++++ krkr2/kirikiri2/src/core/base/win32/makestub.pl	2023-06-14 11:18:56.786945726 -0500
+@@ -324,7 +324,7 @@
+ 		$defs .= $1."\n";
+ 	}
+ 
+-	while($content =~ /\/\*\[C\*\/(.*?)\/\*\C]\*\//gs)
++	while($content =~ /\/\*\[C\*\/(.*?)\/\*C]\*\//gs)
+ 	{
+ 		$impls .= $1."\n";
+ 	}
