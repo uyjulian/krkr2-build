@@ -64,7 +64,7 @@ jobs:
         mkdir t
         pushd t
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/kirikiri2_toolchain_cxx.tar.zst.encrypted
-        openssl enc -d -aes-256-cbc -md md5 -pass pass:for_kirikiri2_compile -in ./kirikiri2_toolchain_cxx.tar.zst.encrypted | tar --zstd -x
+        openssl enc -d -aes-256-cbc -md md5 -pass pass:for_kirikiri2_compile -in ./kirikiri2_toolchain_cxx.tar.zst.encrypted | zstd -d | tar -x
         popd
     - name: Copy updated scripts
       run: |
@@ -105,15 +105,14 @@ jobs:
         popd
     - name: Copy boost
       run: |
-        mkdir -p libs
         cp -f -t t/instroot/Borland/CBuilder/Lib boost/boost_1_30_0/libs/regex/build/bcb5/*.lib
-        cp -f -r boost/boost_1_30_0/boost/ t/instroot/Borland/CBuilder/Include/boost
+        cp -f -r -t t/instroot/Borland/CBuilder/Include boost/boost_1_30_0/boost
     - name: Download and unpack erinalib
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/erinalib_krkr2.tar.zst
         mkdir erinalib
         pushd erinalib
-        tar --zstd -xf ../erinalib_krkr2.tar.zst
+        zstd -dcf ../erinalib_krkr2.tar.zst | tar -x
         popd
     - name: Compile erinalib
       run: |
@@ -130,7 +129,7 @@ jobs:
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/jpeg2_krkr2.tar.zst
         mkdir jpeg2
         pushd jpeg2
-        tar --zstd -xf ../jpeg2_krkr2.tar.zst
+        zstd -dcf ../jpeg2_krkr2.tar.zst | tar -x
         popd
     - name: Compile jpeg2
       run: |
@@ -148,7 +147,7 @@ jobs:
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/zlib_krkr2.tar.zst
         mkdir zlib
         pushd zlib
-        tar --zstd -xf ../zlib_krkr2.tar.zst
+        zstd -dcf ../zlib_krkr2.tar.zst | tar -x
         popd
     - name: Compile zlib
       run: |
@@ -166,7 +165,7 @@ jobs:
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/png_krkr2.tar.zst
         mkdir png
         pushd png
-        tar --zstd -xf ../png_krkr2.tar.zst
+        zstd -dcf ../png_krkr2.tar.zst | tar -x
         popd
     - name: Compile png
       run: |
@@ -184,7 +183,7 @@ jobs:
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/libtomcrypt1_krkr2.tar.zst
         mkdir libtomcrypt1
         pushd libtomcrypt1
-        tar --zstd -xf ../libtomcrypt1_krkr2.tar.zst
+        zstd -dcf ../libtomcrypt1_krkr2.tar.zst | tar -x
         popd
     - name: Compile libtomcrypt1
       run: |
