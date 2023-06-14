@@ -62,25 +62,28 @@ jobs:
     - name: Download and unpack toolchain
       run: |
         mkdir t
-        cd t
+        pushd t
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/kirikiri2_toolchain_cxx.tar.zst.encrypted
         openssl enc -d -aes-256-cbc -md md5 -pass pass:for_kirikiri2_compile -in ./kirikiri2_toolchain_cxx.tar.zst.encrypted | tar --zstd -x
+        popd
     - name: Copy updated scripts
       run: |
         cp -t t scripts/*
     - name: Prepare toolchain
       run: |
-        cd t
+        pushd t
         bash config.sh
         bash fixreg.sh
         bash install.sh
+        popd
     - name: Patch RTL
       run: |
         export PATCH_PATH=$(realpath patches/rtl_exception_hack.patch)
-        cd t/instroot/Borland/CBuilder
+        pushd t/instroot/Borland/CBuilder
         dos2unix Source/RTL/source/except/xx.cpp
         patch -p1 < $PATCH_PATH
         unix2dos Source/RTL/source/except/xx.cpp
+        popd
     - name: Build static VCL multithread RTL
       run: |
         cd t/instroot/Borland/CBuilder/Source/RTL
@@ -92,12 +95,14 @@ jobs:
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/boost_1_30_0.tar.bz2
         mkdir boost
-        cd boost
+        pushd boost
         tar -xjf ../boost_1_30_0.tar.bz2
+        popd
     - name: Compile boost
       run: |
-        cd boost/boost_1_30_0/libs/regex/build
+        pushd boost/boost_1_30_0/libs/regex/build
         wine make -f bcb5.mak
+        popd
     - name: Copy boost
       run: |
         mkdir -p libs
@@ -107,13 +112,15 @@ jobs:
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/erinalib_krkr2.tar.zst
         mkdir erinalib
-        cd erinalib
+        pushd erinalib
         tar --zstd -xf ../erinalib_krkr2.tar.zst
+        popd
     - name: Compile erinalib
       run: |
-        cd erinalib
+        pushd erinalib
         wine bpr2mak -tdeflib.bmk liberina.bpr
         wine make -f liberina.mak
+        popd
     - name: Copy erinalib
       run: |
         cp -f -t t/instroot/Borland/CBuilder/Lib erinalib/liberina.lib
@@ -122,13 +129,15 @@ jobs:
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/jpeg2_krkr2.tar.zst
         mkdir jpeg2
-        cd jpeg2
+        pushd jpeg2
         tar --zstd -xf ../jpeg2_krkr2.tar.zst
+        popd
     - name: Compile jpeg2
       run: |
-        cd jpeg2
+        pushd jpeg2
         wine bpr2mak -tdeflib.bmk libjpeg2.bpr
         wine make -f libjpeg2.mak
+        popd
     - name: Copy jpeg2
       run: |
         cp -f -t t/instroot/Borland/CBuilder/Lib jpeg2/libjpeg2.lib
@@ -138,13 +147,15 @@ jobs:
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/zlib_krkr2.tar.zst
         mkdir zlib
-        cd zlib
+        pushd zlib
         tar --zstd -xf ../zlib_krkr2.tar.zst
+        popd
     - name: Compile zlib
       run: |
-        cd zlib
+        pushd zlib
         wine bpr2mak -tdeflib.bmk zlib.bpr
         wine make -f zlib.mak
+        popd
     - name: Copy zlib
       run: |
         cp -f -t t/instroot/Borland/CBuilder/Lib zlib/zlib.lib
@@ -154,13 +165,15 @@ jobs:
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/png_krkr2.tar.zst
         mkdir png
-        cd png
+        pushd png
         tar --zstd -xf ../png_krkr2.tar.zst
+        popd
     - name: Compile png
       run: |
-        cd png
+        pushd png
         wine bpr2mak -tdeflib.bmk deelibpng.bpr
         wine make -f deelibpng.mak
+        popd
     - name: Copy png
       run: |
         cp -f -t t/instroot/Borland/CBuilder/Lib png/deelibpng.lib
@@ -170,13 +183,15 @@ jobs:
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/libtomcrypt1_krkr2.tar.zst
         mkdir libtomcrypt1
-        cd libtomcrypt1
+        pushd libtomcrypt1
         tar --zstd -xf ../libtomcrypt1_krkr2.tar.zst
+        popd
     - name: Compile libtomcrypt1
       run: |
-        cd libtomcrypt1
+        pushd libtomcrypt1
         wine bpr2mak -tdeflib.bmk libtomcrypt1.bpr
         wine make -f libtomcrypt1.mak
+        popd
     - name: Copy libtomcrypt1
       run: |
         cp -f -t t/instroot/Borland/CBuilder/Lib libtomcrypt1/libtomcrypt1.lib
@@ -185,30 +200,35 @@ jobs:
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/ShLib096.lzh
         mkdir shlib
-        cd shlib
+        pushd shlib
         lha -x ../ShLib096.lzh
+        popd
     - name: Compile shlib
       run: |
-        cd shlib
+        pushd shlib
         wine dcc32 -JPHNE -JL ShellLib50.dpk
         wine tlib ShellLib50.lib $(printf "+%s " *.obj)
+        popd
     - name: Copy shlib
       run: |
         mkdir -p t/instroot/Borland/CBuilder/Projects/comps/o/shlib
         cp -f -t t/instroot/Borland/CBuilder/Projects/comps/o/shlib shlib/ShellLib50.lib shlib/ShellLib50.bpi shlib/*.hpp
-        cd t/instroot/Borland/CBuilder/Projects/comps/o/shlib
+        pushd t/instroot/Borland/CBuilder/Projects/comps/o/shlib
         ln -s ShellLib50.lib shlbpk.lib
         ln -s ShellLib50.lib shlibbpk.lib
         ln -s ShellLib50.bpi shlbpk.bpi
         ln -s ShellLib50.bpi shlibbpk.bpi
+        popd
     - name: Generate make
       run: |
-        cd src
+        pushd src
         wine bpr2mak Project2.bpr
+        popd
     - name: Make
       run: |
-        cd src
+        pushd src
         wine make -f Project2.mak
+        popd
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
