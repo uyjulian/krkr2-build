@@ -149,6 +149,14 @@ jobs:
         pushd zlib
         zstd -dcf ../zlib_krkr2.tar.zst | tar -x
         popd
+    - name: Patch zlib
+      run: |
+        export PATCH_PATH=$(realpath patches/zlib.patch)
+        pushd zlib
+        dos2unix zconf.h
+        patch -p1 < $PATCH_PATH
+        unix2dos zconf.h
+        popd
     - name: Compile zlib
       run: |
         pushd zlib

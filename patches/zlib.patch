@@ -1,0 +1,12 @@
+diff -burN zlib_orig/zconf.h zlib/zconf.h
+--- zlib_orig/zconf.h	2005-06-12 20:17:28.000000000 -0500
++++ zlib/zconf.h	2005-06-12 20:18:36.000000000 -0500
+@@ -261,7 +261,7 @@
+    /* Borland C/C++ and some old MSC versions ignore FAR inside typedef */
+ #  define Bytef Byte FAR
+ #else
+-   typedef Byte  FAR Bytef;
++   typedef ::Byte  FAR Bytef;
+ #endif
+ typedef char  FAR charf;
+ typedef int   FAR intf;
