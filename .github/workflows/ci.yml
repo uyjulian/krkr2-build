@@ -306,8 +306,8 @@ jobs:
     - name: Upload krkr2 artifact
       uses: actions/upload-artifact@master
       with:
-          name: Project2-exe
-          path: kirikiri2/bin/win32/krkr.eXe
+          name: krkr2-exe
+          path: krkr2/kirikiri2/bin/win32/krkr.eXe
     - name: Generate make
       run: |
         pushd src
