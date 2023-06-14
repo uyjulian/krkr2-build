@@ -25,7 +25,7 @@ jobs:
         apt-get install git -y
     - name: Install archive dependencies
       run: |
-        apt-get install gzip bzip2 zstd openssl tar lhasa patch dos2unix curl -y 1>&2
+        apt-get install gzip bzip2 zstd openssl tar lhasa unzip patch dos2unix curl -y 1>&2
     - name: Install Wine
       run: |
         dpkg --add-architecture i386 1>&2
@@ -59,6 +59,16 @@ jobs:
       uses: actions/checkout@v3
       with:
           submodules: recursive
+    - name: Setup NASM
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/nasm-2.05-win32.zip
+        mkdir nasm
+        pushd nasm
+        unzip ../nasm-2.05-win32.zip
+        pushd nasm-2.05
+        cp -t $WINEPREFIX/drive_c/windows/syswow64 nasm.exe
+        popd
+        popd
     - name: Download and unpack toolchain
       run: |
         mkdir t
