@@ -97,6 +97,14 @@ jobs:
         patch -p1 < $PATCH_PATH
         unix2dos Source/RTL/source/except/xx.cpp
         popd
+    - name: Patch VCL
+      run: |
+        export PATCH_PATH=$(realpath patches/vcl_headers.patch)
+        pushd t/instroot/Borland/CBuilder/Include/Vcl
+        dos2unix comctrls.hpp richedit.hpp
+        patch -p1 < $PATCH_PATH
+        unix2dos comctrls.hpp richedit.hpp
+        popd
     - name: Build static VCL multithread RTL
       run: |
         cd t/instroot/Borland/CBuilder/Source/RTL
@@ -217,6 +225,7 @@ jobs:
         cp -f -t t/instroot/Borland/CBuilder/Lib libtomcrypt1/libtomcrypt1.lib
         cp -f -r libtomcrypt1/libtomcrypt/src/headers/ t/instroot/Borland/CBuilder/Include/tomcrypt1
     - name: Download and unpack shlib
+      if: ${{ false }}
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/ShLib096.lzh
         mkdir shlib
@@ -224,12 +233,14 @@ jobs:
         lha -x ../ShLib096.lzh
         popd
     - name: Compile shlib
+      if: ${{ false }}
       run: |
         pushd shlib
         wine dcc32 -JPHNE -JL ShellLib50.dpk
         wine tlib ShellLib50.lib $(printf "+%s " *.obj)
         popd
     - name: Copy shlib
+      if: ${{ false }}
       run: |
         mkdir -p t/instroot/Borland/CBuilder/Projects/comps/o/shlib
         cp -f -t t/instroot/Borland/CBuilder/Projects/comps/o/shlib shlib/ShellLib50.lib shlib/ShellLib50.bpi shlib/*.hpp
@@ -239,6 +250,17 @@ jobs:
         ln -s ShellLib50.bpi shlbpk.bpi
         ln -s ShellLib50.bpi shlibbpk.bpi
         popd
+    - name: Download and unpack shlib precompiled
+      run: |
+        curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/shlib_krkr2.tar.zst
+        mkdir shlib
+        pushd shlib
+        zstd -dcf ../shlib_krkr2.tar.zst | tar -x
+        popd
+    - name: Copy shlib precompiled
+      run: |
+        mkdir -p t/instroot/Borland/CBuilder/Projects/comps/o/shlib
+        cp -f -t t/instroot/Borland/CBuilder/Projects/comps/o/shlib shlib/*.lib shlib/*.bpi shlib/*.hpp
     - name: Download and unpack krkr2
       run: |
         curl -LOC - https://github.com/uyjulian/krkr2-build/releases/download/assets/krkr2_2_32_stable_src.tar.zst
@@ -250,14 +272,14 @@ jobs:
       run: |
         export PATCH_PATH=$(realpath patches/krkr2.patch)
         pushd krkr2
-        dos2unix kirikiri2/src/core/base/win32/makestub.pl
+        dos2unix kirikiri2/src/core/base/win32/makestub.pl kirikiri2/src/tools/win32/krdevui/krdevui.bpr kirikiri2/src/tools/win32/sigchecker/sigchk.bpr
         patch -p1 < $PATCH_PATH
-        unix2dos kirikiri2/src/core/base/win32/makestub.pl
+        unix2dos kirikiri2/src/core/base/win32/makestub.pl kirikiri2/src/tools/win32/krdevui/krdevui.bpr kirikiri2/src/tools/win32/sigchecker/sigchk.bpr
         popd
     - name: Copy libraries for krkr2
       run: |
         mkdir -p krkr2/kirikiri2/lib
-        cp -f -t krkr2/kirikiri2/lib t/instroot/Borland/CBuilder/Lib/{zlib.lib,deelibpng.lib,libjpeg2.lib}
+        cp -f -t krkr2/kirikiri2/lib t/instroot/Borland/CBuilder/Lib/{zlib.lib,deelibpng.lib,libjpeg2.lib,libtomcrypt1.lib}
     - name: Compile krkr2
       run: |
         pushd krkr2
@@ -308,6 +330,32 @@ jobs:
       with:
           name: krkr2-exe
           path: krkr2/kirikiri2/bin/win32/krkr.eXe
+    - name: Compile krdevui
+      run: |
+        pushd krkr2
+        pushd kirikiri2/src/tools/win32/krdevui
+        wine bpr2mak krdevui.bpr
+        wine make -f krdevui.mak
+        popd
+        popd
+    - name: Upload krdevui artifact
+      uses: actions/upload-artifact@master
+      with:
+          name: krdevui-dll
+          path: krkr2/kirikiri2/bin/win32/tools/krdevui.dll
+    - name: Compile sigchecker
+      run: |
+        pushd krkr2
+        pushd kirikiri2/src/tools/win32/sigchecker
+        wine bpr2mak sigchk.bpr
+        wine make -f sigchk.mak
+        popd
+        popd
+    - name: Upload sigchecker artifact
+      uses: actions/upload-artifact@master
+      with:
+          name: sigchk-exe
+          path: krkr2/kirikiri2/bin/win32/enduser-tools/sigchk.exe
     - name: Generate make
       run: |
         pushd src

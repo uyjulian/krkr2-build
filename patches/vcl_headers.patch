@@ -1,0 +1,71 @@
+diff -burN Vcl_orig/comctrls.hpp Vcl/comctrls.hpp
+--- Vcl_orig/comctrls.hpp	2000-01-31 05:00:00.000000000 -0600
++++ Vcl/comctrls.hpp	2023-06-15 00:36:16.666519600 -0500
+@@ -1690,7 +1690,7 @@
+ 	int __fastcall GetLeftIndent(void);
+ 	int __fastcall GetRightIndent(void);
+ 	TNumberingStyle __fastcall GetNumbering(void);
+-	int __fastcall GetTab(Byte Index);
++	int __fastcall GetTab(::Byte Index);
+ 	int __fastcall GetTabCount(void);
+ 	void __fastcall InitPara(_paraformat &Paragraph);
+ 	void __fastcall SetAlignment(Classes::TAlignment Value);
+@@ -1699,7 +1699,7 @@
+ 	void __fastcall SetLeftIndent(int Value);
+ 	void __fastcall SetRightIndent(int Value);
+ 	void __fastcall SetNumbering(TNumberingStyle Value);
+-	void __fastcall SetTab(Byte Index, int Value);
++	void __fastcall SetTab(::Byte Index, int Value);
+ 	void __fastcall SetTabCount(int Value);
+ 	
+ public:
+@@ -1710,7 +1710,7 @@
+ 	__property int LeftIndent = {read=GetLeftIndent, write=SetLeftIndent, nodefault};
+ 	__property TNumberingStyle Numbering = {read=GetNumbering, write=SetNumbering, nodefault};
+ 	__property int RightIndent = {read=GetRightIndent, write=SetRightIndent, nodefault};
+-	__property int Tab[Byte Index] = {read=GetTab, write=SetTab};
++	__property int Tab[::Byte Index] = {read=GetTab, write=SetTab};
+ 	__property int TabCount = {read=GetTabCount, write=SetTabCount, nodefault};
+ public:
+ 	#pragma option push -w-inl
+@@ -3446,13 +3446,13 @@
+ 	bool FWrap;
+ 	TToolButtonStyle FStyle;
+ 	int FUpdateCount;
+-	Byte __fastcall GetButtonState(void);
++	::Byte __fastcall GetButtonState(void);
+ 	int __fastcall GetIndex(void);
+ 	bool __fastcall IsCheckedStored(void);
+ 	bool __fastcall IsImageIndexStored(void);
+ 	bool __fastcall IsWidthStored(void);
+ 	HIDESBASE void __fastcall SetAutoSize(bool Value);
+-	void __fastcall SetButtonState(Byte State);
++	void __fastcall SetButtonState(::Byte State);
+ 	void __fastcall SetDown(bool Value);
+ 	void __fastcall SetDropdownMenu(Menus::TPopupMenu* Value);
+ 	void __fastcall SetGrouped(bool Value);
+diff -burN Vcl_orig/richedit.hpp Vcl/richedit.hpp
+--- Vcl_orig/richedit.hpp	2000-01-31 05:00:00.000000000 -0600
++++ Vcl/richedit.hpp	2023-06-15 00:35:57.569371843 -0500
+@@ -29,8 +29,8 @@
+ 	int yHeight;
+ 	int yOffset;
+ 	unsigned crTextColor;
+-	Byte bCharSet;
+-	Byte bPitchAndFamily;
++	::Byte bCharSet;
++	::Byte bPitchAndFamily;
+ 	char szFaceName[32];
+ } ;
+ 
+@@ -42,8 +42,8 @@
+ 	int yHeight;
+ 	int yOffset;
+ 	unsigned crTextColor;
+-	Byte bCharSet;
+-	Byte bPitchAndFamily;
++	::Byte bCharSet;
++	::Byte bPitchAndFamily;
+ 	wchar_t szFaceName[32];
+ } ;
+ 
